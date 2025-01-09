@@ -15,6 +15,7 @@ import Profile from './pages/Profile';
 
 function App() {
   return (
+    <ErrorBoundary>
     <AuthProvider>
     <BrowserRouter>
       <Nav />
@@ -32,6 +33,7 @@ function App() {
       </Routes>
     </BrowserRouter>
     </AuthProvider>
+    </ErrorBoundary>
   )
 }
 

@@ -51,18 +51,24 @@ const Register = () => {
     try {
       const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/auth/register`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        },
+        credentials: 'include',
         body: JSON.stringify(formData)
       });
+
+      const data = await response.json();
+
       if (response.ok) {
         navigate(`/auth/login?type=${formData.type}`);
       } else {
-        const data = await response.json();
         setErrors({ submit: data.message || 'Registration failed' });
       }
     } catch (error) {
-      setErrors({ submit: 'Network error, please try again.' });
-      console.log(error)
+      console.error('Registration error:', error);
+      setErrors({ submit: 'Network error, please try again later.' });
     }
   };
 
