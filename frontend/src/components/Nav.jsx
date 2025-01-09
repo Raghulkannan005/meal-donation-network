@@ -52,7 +52,7 @@ const Nav = () => {
             {user ? (
               <div className="flex items-center space-x-4">
                 <Link 
-                  to={`/${user?.type || 'org'}/dashboard`}
+                  to={`/${user?.type}/dashboard`}
                   className="text-emerald-800 hover:text-emerald-600"
                 >
                   Dashboard

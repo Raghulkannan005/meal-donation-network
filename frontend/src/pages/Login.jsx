@@ -26,7 +26,7 @@ const Login = () => {
       const result = await login({ ...formData, type });
       
       if (result?.success) {
-        navigate(type === 'donor' ? '/donor/dashboard' : '/org/dashboard');
+        navigate(type === 'donor' ? '/donor/dashboard' : '/organization/dashboard');
       } else {
         setError(result?.error || 'Login failed. Please try again.');
       }
