@@ -13,7 +13,7 @@ const Organizations = () => {
         
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {ORGANIZATIONS.map((org) => (
-            <motion.div
+            <motion.div 
               key={org.id}
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
@@ -22,7 +22,7 @@ const Organizations = () => {
             >
               <div className="flex justify-between items-start mb-4">
                 <h2 className="text-xl font-semibold text-gray-800">{org.name}</h2>
-                <span className="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm">
+                <span className="px-3 py-1 bg-emerald-100 text-emerald-800 rounded-full text-sm">
                   {org.type}
                 </span>
               </div>

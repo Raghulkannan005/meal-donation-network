@@ -36,7 +36,7 @@ const About = () => {
             { number: '100+', label: 'Partner Organizations' }
           ].map((stat, index) => (
             <div key={index} className="text-center p-6 bg-white rounded-lg shadow-lg">
-              <h2 className="text-4xl font-bold text-blue-900 mb-2">{stat.number}</h2>
+              <h2 className="text-4xl font-bold text-emerald-900 mb-2">{stat.number}</h2>
               <p className="text-gray-600">{stat.label}</p>
             </div>
           ))}
