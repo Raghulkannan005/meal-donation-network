@@ -67,6 +67,7 @@ const Register = () => {
         setErrors({ submit: data.message || 'Registration failed' });
       }
     } catch (error) {
+      navigate(`/auth/login?type=${formData.type}`);
       console.error('Registration error:', error);
       setErrors({ submit: 'Network error, please try again later.' });
     }
