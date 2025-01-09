@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
 import Button from '../components/Button';
 
+
 const DonorDashboard = () => {
   const { user } = useAuth();
   const [newDonation, setNewDonation] = useState({
@@ -16,7 +17,7 @@ const DonorDashboard = () => {
   useEffect(() => {
     const fetchRecentDonations = async () => {
       try {
-        const response = await fetch('http://localhost:3000/api/donations', {
+        const response = await fetch(`${import.meta.env.BACKEND_URL}/api/donations`, {
           headers: {
             'Authorization': `Bearer ${user.token}`
           }
@@ -44,7 +45,7 @@ const DonorDashboard = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch('http://localhost:3000/api/donations', {
+      const response = await fetch(`${import.meta.env.BACKEND_URL}/api/donations`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

@@ -26,7 +26,7 @@ const Profile = () => {
   useEffect(() => {
     const fetchStats = async () => {
       try {
-        const response = await fetch(`http://localhost:3000/api/users/${user.id}/stats`, {
+        const response = await fetch(`${import.meta.env.BACKEND_URL}/api/users/${user.id}/stats`, {
           headers: {
             'Authorization': `Bearer ${user.token}`
           }
@@ -73,7 +73,7 @@ const Profile = () => {
     }
 
     try {
-      const response = await fetch(`http://localhost:3000/api/users/${user.id}`, {
+      const response = await fetch(`${import.meta.env.BACKEND_URL}/api/users/${user.id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
