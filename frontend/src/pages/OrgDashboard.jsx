@@ -16,7 +16,7 @@ const OrgDashboard = () => {
   useEffect(() => {
     const fetchDonations = async () => {
       try {
-        const response = await fetch(`${import.meta.env.BACKEND_URL}/api/donations`, {
+        const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/donations`, {
           headers: {
             'Authorization': `Bearer ${user.token}`
           }
@@ -36,7 +36,7 @@ const OrgDashboard = () => {
 
   const handleAcceptDonation = async (donationId) => {
     try {
-      const response = await fetch(`${import.meta.env.BACKEND_URL}/api/donations/${donationId}/accept`, {
+      const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/donations/${donationId}/accept`, {
         method: 'PUT',
         headers: {
           'Authorization': `Bearer ${user.token}`
@@ -56,7 +56,7 @@ const OrgDashboard = () => {
 
   const handleRecordDistribution = async (donationId) => {
     try {
-      const response = await fetch(`${import.meta.env.BACKEND_URL}/api/donations/${donationId}/distribute`, {
+      const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/donations/${donationId}/distribute`, {
         method: 'PUT',
         headers: {
           'Authorization': `Bearer ${user.token}`,

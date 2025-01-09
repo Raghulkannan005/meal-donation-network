@@ -17,7 +17,7 @@ const DonorDashboard = () => {
   useEffect(() => {
     const fetchRecentDonations = async () => {
       try {
-        const response = await fetch(`${import.meta.env.BACKEND_URL}/api/donations`, {
+        const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/donations`, {
           headers: {
             'Authorization': `Bearer ${user.token}`
           }
@@ -45,7 +45,7 @@ const DonorDashboard = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch(`${import.meta.env.BACKEND_URL}/api/donations`, {
+      const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/donations`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

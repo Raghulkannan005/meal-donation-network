@@ -11,7 +11,7 @@ const startServer = async () => {
   try {
     await connectDB();
     app.listen(port, () => {
-      console.log(`Server started at ${process.env.backend_url}`);
+      console.log(`Server started at port:${port}`);
     });
   } catch (error) {
     console.error('Failed to start server:', error);
