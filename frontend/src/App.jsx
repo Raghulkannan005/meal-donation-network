@@ -12,6 +12,7 @@ import OrgDashboard from './pages/OrgDashboard'
 import { AuthProvider } from './context/AuthContext';
 import ProtectedRoute from './components/ProtectedRoute';
 import Profile from './pages/Profile';
+import ErrorBoundary from './components/ErrorBoundary';
 
 function App() {
   return (
