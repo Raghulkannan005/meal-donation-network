@@ -62,6 +62,7 @@ const Register = () => {
       }
     } catch (error) {
       setErrors({ submit: 'Network error, please try again.' });
+      console.log(error)
     }
   };
 

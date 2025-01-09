@@ -5,12 +5,10 @@ import { User, Donation, Contact } from './models/index.js';
 import { generateToken, hashPassword, comparePassword } from './utils/auth.js';
 
 const app = express();
-
-app.use(cors());
 app.use(express.json());
 
 app.use(cors({
-  origin: ['http://localhost:5173', 'https://mealmesh.vercel.app'],
+  origin: 'https://mealmesh.vercel.app',
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
   allowedHeaders: ['Content-Type', 'Authorization']
