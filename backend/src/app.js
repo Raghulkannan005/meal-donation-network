@@ -10,9 +10,12 @@ app.use(express.json());
 app.use(cors({
   origin: 'https://mealmesh.vercel.app',
   credentials: true,
-  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization']
 }));
+
+// Handle preflight requests
+app.options('*', cors());
 
 // Auth Routes
 app.post('/api/auth/register', async (req, res) => {
