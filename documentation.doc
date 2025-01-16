@@ -1,0 +1,394 @@
+MealMesh Documentation
+
+Table of Contents
+1. Executive Summary
+2. Project Overview
+3. System Architecture
+4. Core Features & Functionality
+5. Technical Stack
+6. API Documentation
+7. Database Design
+8. Security Implementation
+9. Installation Guide
+10. Project Structure
+11. Development Workflow
+12. Deployment
+
+Executive Summary
+
+MealMesh (formerly Meal Donate) is a comprehensive web platform designed to combat food waste and address food insecurity by creating an efficient bridge between food donors and distribution organizations. The platform leverages modern web technologies to create a seamless experience for both donors and receiving organizations, facilitating the quick and efficient distribution of surplus food to those in need.
+
+Key Features:
+- Real-time donation listing and tracking
+- Intelligent matching system between donors and organizations
+- Comprehensive impact metrics and reporting
+- Mobile-responsive design
+- Secure authentication and data protection
+- Streamlined donation workflow
+
+Project Overview
+
+Mission
+To reduce food waste and combat hunger by connecting food donors with distribution organizations through a user-friendly, efficient digital platform.
+
+Target Users
+1. Donors
+  - Restaurants
+  - Grocery stores
+  - Catering services
+  - Corporate cafeterias
+  - Individual donors
+
+2. Organizations
+  - Food banks
+  - Homeless shelters
+  - Community centers
+  - Religious organizations
+  - NGOs
+
+Key Benefits
+- Reduction in food waste
+- Efficient resource allocation
+- Real-time tracking and monitoring
+- Data-driven impact measurement
+- Streamlined communication
+
+System Architecture
+
+Backend Architecture
+The system implements a robust microservices architecture:
+
+1. API Layer
+  - RESTful API built with Express.js
+  - Stateless architecture
+  - Load balancing ready
+  - API versioning support
+
+2. Database Layer
+  - MongoDB for flexible document storage
+  - Mongoose ODM for data modeling
+  - Indexing for optimized queries
+  - Data validation at schema level
+
+3. Authentication Service
+  - JWT-based authentication
+  - Role-based access control
+  - Session management
+  - Security middleware
+
+Frontend Architecture
+1. Application Layer
+  - React.js SPA architecture
+  - Component-based structure
+  - Context API for state management
+  - Protected routing system
+
+2. UI/UX Layer
+  - Responsive design with TailwindCSS
+  - Framer Motion animations
+  - Progressive web app capabilities
+  - Accessibility compliance
+
+Core Features & Functionality
+
+Donor Features
+1. Donation Management
+  - Create donation listings
+  - Set pickup windows
+  - Specify food types and quantities
+  - Add special handling instructions
+
+2. Tracking & History
+  - Real-time status updates
+  - Donation history dashboard
+  - Impact metrics visualization
+  - PDF report generation
+
+Organization Features
+1. Donation Discovery
+  - Browse available donations
+  - Search and filter options
+  - Proximity-based matching
+  - Automated notifications
+
+2. Distribution Management
+  - Accept donations
+  - Schedule pickups
+  - Record distribution details
+  - Generate impact reports
+
+Technical Stack
+
+Backend Technologies
+Core:
+- Node.js (v18+)
+- Express.js (v4.18+)
+- MongoDB (v6+)
+- Mongoose ODM (v7+)
+
+Security:
+- JSON Web Tokens
+- bcrypt.js
+- Helmet.js
+- CORS middleware
+
+Testing:
+- Jest
+- Supertest
+
+Frontend Technologies
+Core:
+- React.js (v18+)
+- React Router DOM (v6+)
+- Vite (v4+)
+
+Styling:
+- TailwindCSS (v3+)
+- Framer Motion
+- Hero Icons
+
+Development:
+- ESLint
+- Prettier
+- TypeScript
+
+API Documentation
+
+Authentication Endpoints
+
+Register User
+POST /api/auth/register
+Content-Type: application/json
+
+Request Body:
+{
+  "name": string,
+  "email": string,
+  "password": string,
+  "phone": string,
+  "address": string,
+  "type": "donor" | "organization"
+}
+
+Response: 
+{
+  "token": string,
+  "user": UserObject
+}
+
+Login
+POST /api/auth/login
+Content-Type: application/json
+
+Request Body:
+{
+  "email": string,
+  "password": string
+}
+
+Response:
+{
+  "token": string,
+  "user": UserObject
+}
+
+Donation Endpoints
+
+List Donations
+GET /api/donations
+Query Parameters:
+- page: number
+- limit: number
+- status: string
+- type: string
+
+Response:
+{
+  "donations": DonationObject[],
+  "total": number,
+  "page": number,
+  "pages": number
+}
+
+Database Design
+
+User Schema
+{
+  name: {
+   type: String,
+   required: true,
+   trim: true
+  },
+  email: {
+   type: String,
+   required: true,
+   unique: true,
+   lowercase: true
+  },
+  password: {
+   type: String,
+   required: true,
+   minlength: 8
+  },
+  phone: {
+   type: String,
+   required: true
+  },
+  address: {
+   type: String,
+   required: true
+  },
+  type: {
+   type: String,
+   enum: ['donor', 'organization'],
+   required: true
+  },
+  createdAt: {
+   type: Date,
+   default: Date.now
+  },
+  stats: {
+   totalDonations: Number,
+   impactScore: Number
+  }
+}
+
+Donation Schema
+{
+  donor: {
+   type: mongoose.Schema.Types.ObjectId,
+   ref: 'User',
+   required: true
+  },
+  items: {
+   type: String,
+   required: true
+  },
+  quantity: {
+   type: String,
+   required: true
+  },
+  pickupTime: {
+   type: Date,
+   required: true
+  },
+  status: {
+   type: String,
+   enum: ['Available', 'Accepted', 'Distributed'],
+   default: 'Available'
+  },
+  location: {
+   type: {
+    type: String,
+    enum: ['Point'],
+    required: true
+   },
+   coordinates: {
+    type: [Number],
+    required: true
+   }
+  },
+  acceptedBy: {
+   type: mongoose.Schema.Types.ObjectId,
+   ref: 'User'
+  },
+  distributionDetails: {
+   date: Date,
+   beneficiaries: Number,
+   notes: String
+  }
+}
+
+Security Implementation
+
+Authentication & Authorization
+1. JWT Implementation
+  - Token-based authentication
+  - Refresh token rotation
+  - Secure cookie storage
+  - Token expiration handling
+
+2. Password Security
+  - Bcrypt hashing
+  - Salt rounds configuration
+  - Password strength validation
+  - Rate limiting on auth endpoints
+
+3. API Security
+  - CORS configuration
+  - Helmet.js middleware
+  - Request validation
+  - Rate limiting
+  - XSS protection
+
+Installation Guide
+
+Local Development Setup
+
+1. Clone Repository
+git clone https://github.com/Raghulkannan005/meal-donation-network
+cd mealmesh
+
+2. Backend Setup
+cd backend
+cp .env.example .env
+npm install
+npm run dev
+
+3. Frontend Setup
+cd frontend
+cp .env.example .env
+npm install
+npm run dev
+
+Project Structure
+
+/mealmesh
+├── /backend
+│   ├── /src
+│   │   ├── /models
+│   │   ├── /routes
+│   │   ├── /controllers
+│   │   ├── /middleware
+│   │   ├── /utils
+│   │   └── /config
+│   ├── /tests
+│   └── /docs
+├── /frontend
+│   ├── /src
+│   │   ├── /components
+│   │   ├── /pages
+│   │   ├── /context
+│   │   ├── /hooks
+│   │   ├── /utils
+│   │   └── /assets
+│   └── /public
+└── /docs
+
+Development Workflow
+
+Git Workflow
+1. Feature branch creation
+2. Development and testing
+3. Pull request submission
+4. Code review process
+5. Merge and deployment
+
+Testing Strategy
+1. Unit testing
+2. Integration testing
+3. End-to-end testing
+4. Performance testing
+
+Deployment
+
+Production Deployment
+1. Backend Deployment
+  - Hosted on: Vercel
+  - Environment: Node.js
+  - Database: MongoDB Atlas
+
+2. Frontend Deployment
+  - Hosted on: Vercel
+  - Build process
+  - Environment variables
