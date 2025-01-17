@@ -13,8 +13,17 @@ export const AuthProvider = ({ children }) => {
     localStorage.setItem('user', JSON.stringify(userData));
   };
 
-  const logout = () => {
+  const logout = async() => {
     setUser(null);
+    localStorage.removeItem('user');
+    try {
+      await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/auth/logout`, {
+      method: 'POST',
+      credentials: 'include'
+      });
+    } catch (error) {
+      console.error('Logout error:', error);
+    }
     localStorage.removeItem('user');
   };
 
