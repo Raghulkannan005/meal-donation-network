@@ -1,4 +1,5 @@
 // frontend/src/components/Nav.jsx
+
 import { motion } from 'framer-motion';
 import { Link, useNavigate } from 'react-router-dom';
 import { useState } from 'react';
@@ -6,13 +7,20 @@ import { useAuth } from '../context/AuthContext';
 
 const Nav = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const [openPartners, setOpenPartners] = useState(false);
+
   const { user, logout } = useAuth();
+  console.log(user)
   const navigate = useNavigate();
 
   const handleLogout = () => {
     logout();
     navigate('/');
   };
+
+  const handleOpen = () => {
+    setOpenPartners(!openPartners);
+  }
 
   return (
     <nav className="bg-white/80 backdrop-blur-sm shadow-sm fixed w-full top-0 z-50">
@@ -32,19 +40,26 @@ const Nav = () => {
           </div>
 
           {/* Desktop Navigation */}
-          <div className="hidden sm:flex items-center space-x-8">
+          <div className="hidden sm:flex items-center space-x-8 relative">
             <Link to="/" className="text-emerald-800 hover:text-emerald-600">
               Home
             </Link>
             <Link to="/about" className="text-emerald-800 hover:text-emerald-600">
               About
             </Link>
-            <Link to="/donors" className="text-emerald-800 hover:text-emerald-600">
-              Donors
-            </Link>
-            <Link to="/organizations" className="text-emerald-800 hover:text-emerald-600">
-              Organizations
-            </Link>
+            <div className='text-emerald-800 hover:text-emerald-600 cursor-pointer' onClick={()=>handleOpen()}>Partners</div>
+
+            {openPartners? (
+              <div className="flex flex-col items-center space-y-4 absolute top-16 left-20 bg-white/90 backdrop-blur-sm border-t border-emerald-100 p-5 rounded-lg">
+                <Link to="/donors" className="text-emerald-800 hover:text-emerald-600">
+                  Donors
+                </Link>
+                <Link to="/organizations" className="text-emerald-800 hover:text-emerald-600">
+                  Organizations
+                </Link>
+              </div>
+            ):null}
+
             <Link to="/contact" className="text-emerald-800 hover:text-emerald-600">
               Contact
             </Link>

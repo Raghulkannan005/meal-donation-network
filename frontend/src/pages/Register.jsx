@@ -5,6 +5,8 @@ import { motion } from 'framer-motion';
 const Register = () => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
+
+  
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -15,6 +17,7 @@ const Register = () => {
     type: searchParams.get('type') || 'donor'
   });
   const [errors, setErrors] = useState({});
+  console.log(formData)
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -51,7 +54,7 @@ const Register = () => {
     try {
       const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/auth/register`, {
         method: 'POST',
-        headers: { 
+        headers: {
           'Content-Type': 'application/json',
           'Accept': 'application/json'
         },

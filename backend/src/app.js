@@ -52,7 +52,7 @@ app.post('/api/auth/login', async (req, res) => {
   try {
     const { email, password, type } = req.body;
     const user = await User.findOne({ email, type });
-    
+
     if (user && await comparePassword(password, user.password)) {
       res.json({
         id: user._id,
@@ -70,6 +70,7 @@ app.post('/api/auth/login', async (req, res) => {
 });
 
 // Protected Routes
+
 app.use(protect);
 
 // Donation Routes
@@ -100,7 +101,7 @@ app.put('/api/donations/:id/accept', async (req, res) => {
   try {
     const donation = await Donation.findByIdAndUpdate(
       req.params.id,
-      { 
+      {
         status: 'Accepted',
         organization: req.user.id
       },
