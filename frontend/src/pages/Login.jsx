@@ -1,13 +1,23 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useSearchParams, useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { motion } from 'framer-motion';
 
 const Login = () => {
   const [searchParams] = useSearchParams();
-  const type = searchParams.get('type');
   const navigate = useNavigate();
-  const { login } = useAuth();
+  const { login, user } = useAuth();
+  
+  // Get type parameter safely
+  const type = searchParams.get('type');
+  
+  // Use useEffect for navigation based on type
+  useEffect(() => {
+    if (type !== 'donor' && type !== 'organization') {
+      navigate('/');
+    }
+  }, [type, navigate]);
+
   const [formData, setFormData] = useState({
     email: '',
     password: ''
@@ -100,6 +110,16 @@ const Login = () => {
             {loading ? 'Logging in...' : 'Login'}
           </button>
         </form>
+
+        {user ? (
+          <div className="flex items-center space-x-4">
+            {/* User links */}
+          </div>
+        ) : (
+          <div>
+            {/* No login/register links here */}
+          </div>
+        )}
 
         <p className="mt-4 text-center text-sm text-gray-600">
           Don&apos;t have an account?

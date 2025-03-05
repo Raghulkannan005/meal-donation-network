@@ -17,7 +17,6 @@ const Register = () => {
     type: searchParams.get('type') || 'donor'
   });
   const [errors, setErrors] = useState({});
-  console.log(formData)
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -70,7 +69,8 @@ const Register = () => {
         setErrors({ submit: data.message || 'Registration failed' });
       }
     } catch (error) {
-      navigate(`/auth/login?type=${formData.type}`);
+      // Remove automatic navigation on error
+      // navigate(`/auth/login?type=${formData.type}`);
       console.error('Registration error:', error);
       setErrors({ submit: 'Network error, please try again later.' });
     }

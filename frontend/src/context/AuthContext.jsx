@@ -18,13 +18,12 @@ export const AuthProvider = ({ children }) => {
     localStorage.removeItem('user');
     try {
       await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/auth/logout`, {
-      method: 'POST',
-      credentials: 'include'
+        method: 'POST',
+        credentials: 'include'
       });
     } catch (error) {
       console.error('Logout error:', error);
     }
-    localStorage.removeItem('user');
   };
 
   const updateUser = (userData) => {

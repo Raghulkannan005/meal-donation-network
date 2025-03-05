@@ -27,6 +27,10 @@ app.use((req, res, next) => {
   next();
 });
 
+app.get('/api/health', (req, res) => {
+  res.status(200).json({ status: 'ok' });
+});
+
 // Auth Routes
 app.post('/api/auth/register', async (req, res) => {
   try {

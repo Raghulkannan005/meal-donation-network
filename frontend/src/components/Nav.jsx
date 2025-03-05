@@ -86,7 +86,13 @@ const Nav = () => {
                 </button>
               </div>
             ) : (
-              <div>
+              <div className="flex items-center space-x-4">
+                <Link to="/auth/login?type=donor" className="text-emerald-800 hover:text-emerald-600">
+                  Login
+                </Link>
+                <Link to="/auth/register?type=donor" className="text-emerald-800 hover:text-emerald-600">
+                  Register
+                </Link>
               </div>
             )}
           </div>
@@ -174,6 +180,14 @@ const Nav = () => {
   </>
 ) : (
   <>
+  <div className="flex items-center space-x-4">
+    <Link to="/auth/login" className="text-emerald-800 hover:text-emerald-600">
+      Login
+    </Link>
+    <Link to="/auth/register" className="text-emerald-800 hover:text-emerald-600">
+      Register
+    </Link>
+  </div>
   </>
 )}
 </div>
