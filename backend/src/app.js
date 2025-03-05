@@ -7,14 +7,25 @@ import { generateToken, hashPassword, comparePassword } from './utils/auth.js';
 const app = express();
 app.use(express.json());
 
-app.use(cors({
-  origin: ['http://localhost:5173', 'https://mealmesh.vercel.app'],
-  credentials: true,
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS']
-}));
-
-// Handle preflight requests
-app.options('*', cors());
+// CORS configuration - updated for Vercel deployment
+app.use((req, res, next) => {
+  const allowedOrigins = ['http://localhost:5173', 'https://mealmesh.vercel.app'];
+  const origin = req.headers.origin;
+  
+  if (allowedOrigins.includes(origin)) {
+    res.setHeader('Access-Control-Allow-Origin', origin);
+  }
+  
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');``
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+  res.setHeader('Access-Control-Allow-Credentials', 'true');
+  
+  if (req.method === 'OPTIONS') {
+    return res.status(200).end();
+  }
+  
+  next();
+});
 
 // Auth Routes
 app.post('/api/auth/register', async (req, res) => {
