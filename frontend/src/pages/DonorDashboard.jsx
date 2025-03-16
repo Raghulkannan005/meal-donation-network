@@ -17,28 +17,48 @@ const DonorDashboard = () => {
   const [success, setSuccess] = useState('');
   const [loading, setLoading] = useState(false);
   const [initialLoading, setInitialLoading] = useState(true);
+  const [stats, setStats] = useState({
+    totalDonations: 0,
+    activeDonations: 0,
+    completedDonations: 0
+  });
 
   useEffect(() => {
-    const fetchRecentDonations = async () => {
+    const fetchData = async () => {
       setInitialLoading(true);
       try {
-        const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/donations`, {
+        // Fetch donations
+        const donationsResponse = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/donations`, {
           headers: {
             'Authorization': `Bearer ${user.token}`
           }
         });
-        if (response.ok) {
-          const data = await response.json();
-          setRecentDonations(data.filter(donation => donation.donor._id === user.id));
+        
+        // Fetch stats
+        const statsResponse = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/users/${user.id}/stats`, {
+          headers: {
+            'Authorization': `Bearer ${user.token}`
+          }
+        });
+        
+        if (donationsResponse.ok) {
+          const donationsData = await donationsResponse.json();
+          setRecentDonations(donationsData.filter(donation => donation.donor._id === user.id));
+        }
+        
+        if (statsResponse.ok) {
+          const statsData = await statsResponse.json();
+          setStats(statsData);
         }
       } catch (error) {
-        console.error('Failed to fetch recent donations:', error);
+        console.error('Failed to fetch data:', error);
+        setError('Failed to load dashboard data. Please refresh the page.');
       } finally {
         setInitialLoading(false);
       }
     };
 
-    fetchRecentDonations();
+    fetchData();
   }, [user.token, user.id]);
 
   const handleChange = (e) => {
@@ -120,7 +140,7 @@ const DonorDashboard = () => {
                 <p className="text-sm text-emerald-600">Total Donations</p>
                 <span className="text-emerald-500 bg-emerald-100 p-1 rounded-full">📦</span>
               </div>
-              <p className="text-2xl font-bold text-emerald-900">{recentDonations.length}</p>
+              <p className="text-2xl font-bold text-emerald-900">{stats.totalDonations}</p>
             </motion.div>
             <motion.div 
               whileHover={{ scale: 1.03 }} 
@@ -131,7 +151,7 @@ const DonorDashboard = () => {
                 <p className="text-sm text-emerald-600">Active Requests</p>
                 <span className="text-emerald-500 bg-emerald-100 p-1 rounded-full">🔄</span>
               </div>
-              <p className="text-2xl font-bold text-emerald-900">{recentDonations.filter(d => d.status === 'Available').length}</p>
+              <p className="text-2xl font-bold text-emerald-900">{stats.activeDonations}</p>
             </motion.div>
             <motion.div 
               whileHover={{ scale: 1.03 }} 
@@ -139,10 +159,10 @@ const DonorDashboard = () => {
               className="bg-emerald-50 p-4 rounded-lg border border-emerald-100 hover:border-emerald-200 cursor-pointer"
             >
               <div className="flex items-center justify-between">
-                <p className="text-sm text-emerald-600">Rating</p>
-                <span className="text-emerald-500 bg-emerald-100 p-1 rounded-full">⭐</span>
+                <p className="text-sm text-emerald-600">Completed Donations</p>
+                <span className="text-emerald-500 bg-emerald-100 p-1 rounded-full">✅</span>
               </div>
-              <p className="text-2xl font-bold text-emerald-900">4.8</p>
+              <p className="text-2xl font-bold text-emerald-900">{stats.completedDonations}</p>
             </motion.div>
           </div>
         </motion.div>

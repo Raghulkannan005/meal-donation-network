@@ -60,6 +60,10 @@ const Nav = () => {
               </div>
             ):null}
 
+            <Link to="/food-safety" className="text-emerald-800 hover:text-emerald-600">
+              Food Safety
+            </Link>
+
             <Link to="/contact" className="text-emerald-800 hover:text-emerald-600">
               Contact
             </Link>
@@ -143,6 +147,13 @@ const Nav = () => {
   onClick={() => setIsOpen(false)}
 >
   Organizations
+</Link>
+<Link
+  to="/food-safety"
+  className="block py-2 text-emerald-800 hover:text-emerald-600"
+  onClick={() => setIsOpen(false)}
+>
+  Food Safety
 </Link>
 <Link
   to="/contact"

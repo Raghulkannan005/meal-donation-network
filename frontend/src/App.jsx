@@ -13,6 +13,10 @@ import { AuthProvider } from './context/AuthContext';
 import ProtectedRoute from './components/ProtectedRoute';
 import Profile from './pages/Profile';
 import ErrorBoundary from './components/ErrorBoundary';
+import FoodSafety from './pages/FoodSafety';
+// Uncomment as you implement these features:
+// import Analytics from './pages/Analytics';
+// import DonationMap from './pages/DonationMap';
 
 function App() {
   return (
@@ -31,6 +35,11 @@ function App() {
         <Route path="/donors" element={<Donors />} />
         <Route path="/organizations" element={<Organizations />} />
         <Route path="/contact" element={<Contact />} />
+        <Route path="/food-safety" element={<FoodSafety />} />
+        
+        {/* Uncomment as you implement these pages */}
+        {/* <Route path="/analytics" element={<ProtectedRoute><Analytics /></ProtectedRoute>} /> */}
+        {/* <Route path="/donation-map" element={<DonationMap />} /> */}
       </Routes>
     </BrowserRouter>
     </AuthProvider>

@@ -19,6 +19,11 @@ const OrgDashboard = () => {
   const [loading, setLoading] = useState(false);
   const [initialLoading, setInitialLoading] = useState(true);
   const [selectedDonation, setSelectedDonation] = useState(null);
+  const [orgStats, setOrgStats] = useState({
+    peopleServed: 0,
+    activeDonations: 0,
+    completedDonations: 0
+  });
 
   useEffect(() => {
     const fetchDonations = async () => {
@@ -31,8 +36,24 @@ const OrgDashboard = () => {
         });
         if (response.ok) {
           const data = await response.json();
-          setAvailableDonations(data.filter(d => d.status === 'Available'));
-          setAcceptedDonations(data.filter(d => d.status === 'Accepted' && d.organization === user.id));
+          const available = data.filter(d => d.status === 'Available');
+          const accepted = data.filter(d => d.status === 'Accepted' && d.organization === user.id);
+          const distributed = data.filter(d => d.status === 'Distributed' && d.organization === user.id);
+          
+          let totalPeopleServed = 0;
+          distributed.forEach(donation => {
+            if (donation.distribution && donation.distribution.meals) {
+              totalPeopleServed += parseInt(donation.distribution.meals) || 0;
+            }
+          });
+          
+          setAvailableDonations(available);
+          setAcceptedDonations(accepted);
+          setOrgStats({
+            peopleServed: totalPeopleServed,
+            activeDonations: accepted.length,
+            completedDonations: distributed.length
+          });
         }
       } catch (error) {
         console.error('Failed to fetch donations:', error);
@@ -162,7 +183,7 @@ const OrgDashboard = () => {
                 <p className="text-sm text-emerald-600">People Served</p>
                 <span className="text-emerald-500 bg-emerald-100 p-1 rounded-full">👥</span>
               </div>
-              <p className="text-2xl font-bold text-emerald-900">5000</p>
+              <p className="text-2xl font-bold text-emerald-900">{orgStats.peopleServed}</p>
             </motion.div>
             <motion.div 
               whileHover={{ scale: 1.03 }} 
@@ -181,10 +202,10 @@ const OrgDashboard = () => {
               className="bg-emerald-50 p-4 rounded-lg border border-emerald-100 hover:border-emerald-200 cursor-pointer"
             >
               <div className="flex items-center justify-between">
-                <p className="text-sm text-emerald-600">Rating</p>
-                <span className="text-emerald-500 bg-emerald-100 p-1 rounded-full">⭐</span>
+                <p className="text-sm text-emerald-600">Completed Donations</p>
+                <span className="text-emerald-500 bg-emerald-100 p-1 rounded-full">✅</span>
               </div>
-              <p className="text-2xl font-bold text-emerald-900">4.9</p>
+              <p className="text-2xl font-bold text-emerald-900">{orgStats.completedDonations}</p>
             </motion.div>
           </div>
         </motion.div>
