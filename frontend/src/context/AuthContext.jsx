@@ -4,8 +4,14 @@ const AuthContext = createContext(null);
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(() => {
-    const savedUser = localStorage.getItem('user');
-    return savedUser ? JSON.parse(savedUser) : null;
+    try {
+      const savedUser = localStorage.getItem('user');
+      return savedUser ? JSON.parse(savedUser) : null;
+    } catch (error) {
+      console.error('Error parsing user data:', error);
+      localStorage.removeItem('user'); // Remove corrupted data
+      return null;
+    }
   });
 
   const login = (userData) => {
@@ -27,9 +33,18 @@ export const AuthProvider = ({ children }) => {
   };
 
   const updateUser = (userData) => {
-    const updatedUser = { ...user, ...userData };
-    setUser(updatedUser);
-    localStorage.setItem('user', JSON.stringify(updatedUser));
+    try {
+      if (!user) {
+        console.error('Cannot update user: No user is currently logged in');
+        return;
+      }
+      
+      const updatedUser = { ...user, ...userData };
+      setUser(updatedUser);
+      localStorage.setItem('user', JSON.stringify(updatedUser));
+    } catch (error) {
+      console.error('Error updating user:', error);
+    }
   };
 
   return (

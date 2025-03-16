@@ -10,17 +10,12 @@ const Nav = () => {
   const [openPartners, setOpenPartners] = useState(false);
 
   const { user, logout } = useAuth();
-  console.log(user)
   const navigate = useNavigate();
 
   const handleLogout = () => {
     logout();
     navigate('/');
   };
-
-  const handleOpen = () => {
-    setOpenPartners(!openPartners);
-  }
 
   return (
     <nav className="bg-white/80 backdrop-blur-sm shadow-sm fixed w-full top-0 z-50">
@@ -47,18 +42,28 @@ const Nav = () => {
             <Link to="/about" className="text-emerald-800 hover:text-emerald-600">
               About
             </Link>
-            <div className='text-emerald-800 hover:text-emerald-600 cursor-pointer' onClick={()=>handleOpen()}>Partners</div>
-
-            {openPartners? (
-              <div className="flex flex-col items-center space-y-4 absolute top-16 left-20 bg-white/90 backdrop-blur-sm border-t border-emerald-100 p-5 rounded-lg">
-                <Link to="/donors" className="text-emerald-800 hover:text-emerald-600">
-                  Donors
-                </Link>
-                <Link to="/organizations" className="text-emerald-800 hover:text-emerald-600">
-                  Organizations
-                </Link>
+            
+            {/* Partners dropdown with hover functionality */}
+            <div 
+              className="relative" 
+              onMouseEnter={() => setOpenPartners(true)}
+              onMouseLeave={() => setOpenPartners(false)}
+            >
+              <div className="text-emerald-800 hover:text-emerald-600 cursor-pointer">
+                Partners
               </div>
-            ):null}
+
+              {openPartners && (
+                <div className="flex flex-col items-center space-y-4 absolute top-6 left-0 bg-white/90 backdrop-blur-sm border border-emerald-100 p-5 rounded-lg shadow-md">
+                  <Link to="/donors" className="text-emerald-800 hover:text-emerald-600 whitespace-nowrap">
+                    Donors
+                  </Link>
+                  <Link to="/organizations" className="text-emerald-800 hover:text-emerald-600 whitespace-nowrap">
+                    Organizations
+                  </Link>
+                </div>
+              )}
+            </div>
 
             <Link to="/food-safety" className="text-emerald-800 hover:text-emerald-600">
               Food Safety
@@ -191,14 +196,20 @@ const Nav = () => {
   </>
 ) : (
   <>
-  <div className="flex items-center space-x-4">
-    <Link to="/auth/login" className="text-emerald-800 hover:text-emerald-600">
+    <Link
+      to="/auth/login?type=donor"
+      className="block py-2 text-emerald-800 hover:text-emerald-600"
+      onClick={() => setIsOpen(false)}
+    >
       Login
     </Link>
-    <Link to="/auth/register" className="text-emerald-800 hover:text-emerald-600">
+    <Link
+      to="/auth/register?type=donor"
+      className="block py-2 text-emerald-800 hover:text-emerald-600"
+      onClick={() => setIsOpen(false)}
+    >
       Register
     </Link>
-  </div>
   </>
 )}
 </div>

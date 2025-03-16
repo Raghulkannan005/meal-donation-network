@@ -122,6 +122,7 @@ const Contact = () => {
             <div className="text-center">
               <Button
                 label="Send Message"
+                type="submit"
                 className="px-8 py-3 text-lg font-semibold text-white bg-emerald-900 rounded-lg hover:bg-emerald-800 transform hover:scale-105 transition-all duration-300 shadow-lg"
               />
             </div>

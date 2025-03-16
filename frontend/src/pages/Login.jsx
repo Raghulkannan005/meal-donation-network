@@ -2,21 +2,26 @@ import { useState, useEffect } from 'react';
 import { useSearchParams, useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { motion } from 'framer-motion';
+import Button from '../components/Button';
 
 const Login = () => {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const { login, user } = useAuth();
   
-  // Get type parameter safely
-  const type = searchParams.get('type');
+  // Get return path if available
+  const returnTo = searchParams.get('returnTo') || '';
   
-  // Use useEffect for navigation based on type
+  // Get type parameter from URL, defaulting to 'donor' if not specified
+  const [loginType, setLoginType] = useState(searchParams.get('type') || 'donor');
+  
   useEffect(() => {
-    if (type !== 'donor' && type !== 'organization') {
-      navigate('/');
-    }
-  }, [type, navigate]);
+    // Update URL when type changes, preserve returnTo if present
+    const url = returnTo 
+      ? `/auth/login?type=${loginType}&returnTo=${encodeURIComponent(returnTo)}`
+      : `/auth/login?type=${loginType}`;
+    navigate(url, { replace: true });
+  }, [loginType, navigate, returnTo]);
 
   const [formData, setFormData] = useState({
     email: '',
@@ -36,7 +41,7 @@ const Login = () => {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ ...formData, type }),
+        body: JSON.stringify({ ...formData, type: loginType }),
         credentials: 'include'
       });
 
@@ -44,7 +49,13 @@ const Login = () => {
 
       if (response.ok) {
         login(data); // Update auth context
-        navigate(type === 'donor' ? '/donor/dashboard' : '/organization/dashboard');
+        
+        // Redirect to the return path if provided, otherwise to appropriate dashboard
+        if (returnTo) {
+          navigate(returnTo);
+        } else {
+          navigate(data.type === 'donor' ? '/donor/dashboard' : '/organization/dashboard');
+        }
       } else {
         setError(data.message || 'Login failed. Please check your credentials.');
       }
@@ -56,6 +67,10 @@ const Login = () => {
     }
   };
 
+  const toggleLoginType = () => {
+    setLoginType(loginType === 'donor' ? 'organization' : 'donor');
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-emerald-100 to-white pt-20">
       <motion.div 
@@ -63,8 +78,33 @@ const Login = () => {
         animate={{ opacity: 1, y: 0 }}
         className="max-w-md mx-auto bg-white p-8 rounded-xl shadow-lg"
       >
+        <div className="flex justify-center mb-6">
+          <div className="flex p-1 bg-emerald-100 rounded-lg">
+            <button 
+              onClick={() => setLoginType('donor')}
+              className={`px-4 py-2 rounded-md transition-colors ${
+                loginType === 'donor' 
+                  ? 'bg-emerald-600 text-white' 
+                  : 'text-emerald-800 hover:bg-emerald-200'
+              }`}
+            >
+              Donor
+            </button>
+            <button 
+              onClick={() => setLoginType('organization')}
+              className={`px-4 py-2 rounded-md transition-colors ${
+                loginType === 'organization' 
+                  ? 'bg-emerald-600 text-white' 
+                  : 'text-emerald-800 hover:bg-emerald-200'
+              }`}
+            >
+              Organization
+            </button>
+          </div>
+        </div>
+        
         <h2 className="text-2xl font-bold text-emerald-900 mb-6">
-          Login as {type === 'donor' ? 'Donor' : 'Organization'}
+          Login as {loginType === 'donor' ? 'Donor' : 'Organization'}
         </h2>
         
         <form onSubmit={handleSubmit} className="space-y-4">
@@ -98,7 +138,8 @@ const Login = () => {
             </div>
           )}
 
-          <button
+          <Button
+            label={loading ? 'Logging in...' : 'Login'}
             type="submit"
             disabled={loading}
             className={`w-full py-2 px-4 rounded-md text-white font-medium
@@ -106,25 +147,13 @@ const Login = () => {
                 ? 'bg-emerald-400 cursor-not-allowed' 
                 : 'bg-emerald-600 hover:bg-emerald-700'
               } transition-colors duration-200`}
-          >
-            {loading ? 'Logging in...' : 'Login'}
-          </button>
+          />
         </form>
 
-        {user ? (
-          <div className="flex items-center space-x-4">
-            {/* User links */}
-          </div>
-        ) : (
-          <div>
-            {/* No login/register links here */}
-          </div>
-        )}
-
         <p className="mt-4 text-center text-sm text-gray-600">
-          Don&apos;t have an account?
+          Don&apos;t have an account?{' '}
           <Link 
-            to={`/auth/register?type=${type}`}
+            to={`/auth/register?type=${loginType}`}
             className="text-emerald-600 hover:text-emerald-700 font-medium"
           >
             Register here

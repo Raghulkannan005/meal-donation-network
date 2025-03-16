@@ -28,6 +28,14 @@ const OrgDashboard = () => {
   useEffect(() => {
     const fetchDonations = async () => {
       setInitialLoading(true);
+      
+      // Check if user is authenticated
+      if (!user || !user.token) {
+        setError('Authentication error. Please log in again.');
+        setInitialLoading(false);
+        return;
+      }
+      
       try {
         const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/donations`, {
           headers: {
@@ -63,7 +71,7 @@ const OrgDashboard = () => {
     };
 
     fetchDonations();
-  }, [user.token, user.id]);
+  }, [user?.token, user?.id]);
 
   useEffect(() => {
     setFilteredDonations(
@@ -79,6 +87,13 @@ const OrgDashboard = () => {
     setError('');
     setSuccess('');
     setLoading(true);
+    
+    // Check if user is authenticated
+    if (!user || !user.token) {
+      setError('Authentication error. Please log in again.');
+      setLoading(false);
+      return;
+    }
     
     try {
       const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/donations/${donationId}/accept`, {
@@ -112,6 +127,13 @@ const OrgDashboard = () => {
     
     if (!distributionData.meals || !distributionData.date) {
       setError('Please fill in the required distribution details');
+      setLoading(false);
+      return;
+    }
+    
+    // Check if user is authenticated
+    if (!user || !user.token) {
+      setError('Authentication error. Please log in again.');
       setLoading(false);
       return;
     }
@@ -171,7 +193,7 @@ const OrgDashboard = () => {
           animate={{ opacity: 1, y: 0 }}
           className="bg-white rounded-xl shadow-lg p-6 mb-8 transition-all hover:shadow-xl"
         >
-          <h1 className="text-2xl font-bold text-emerald-900 mb-2">Welcome, {user.name}! 👋</h1>
+          <h1 className="text-2xl font-bold text-emerald-900 mb-2">Welcome, {user?.name || 'User'}! 👋</h1>
           <p className="text-gray-600 mb-6">Here's an overview of your organization activity</p>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
             <motion.div 

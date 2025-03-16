@@ -1,11 +1,19 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate, useSearchParams, Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
+import Button from '../components/Button';
 
 const Register = () => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
-
+  
+  // Get registration type from URL params, default to donor
+  const [registerType, setRegisterType] = useState(searchParams.get('type') || 'donor');
+  
+  // Update URL when register type changes
+  useEffect(() => {
+    navigate(`/auth/register?type=${registerType}`, { replace: true });
+  }, [registerType, navigate]);
   
   const [formData, setFormData] = useState({
     name: '',
@@ -14,8 +22,17 @@ const Register = () => {
     confirmPassword: '',
     phone: '',
     address: '',
-    type: searchParams.get('type') || 'donor'
+    type: registerType
   });
+  
+  // Update form data type when register type changes
+  useEffect(() => {
+    setFormData(prev => ({
+      ...prev,
+      type: registerType
+    }));
+  }, [registerType]);
+  
   const [errors, setErrors] = useState({});
 
   const handleChange = (e) => {
@@ -69,8 +86,6 @@ const Register = () => {
         setErrors({ submit: data.message || 'Registration failed' });
       }
     } catch (error) {
-      // Remove automatic navigation on error
-      // navigate(`/auth/login?type=${formData.type}`);
       console.error('Registration error:', error);
       setErrors({ submit: 'Network error, please try again later.' });
     }
@@ -83,8 +98,34 @@ const Register = () => {
         animate={{ opacity: 1, y: 0 }}
         className="max-w-md mx-auto bg-white p-8 rounded-xl shadow-lg"
       >
+        {/* Add type toggle similar to login page */}
+        <div className="flex justify-center mb-6">
+          <div className="flex p-1 bg-emerald-100 rounded-lg">
+            <button 
+              onClick={() => setRegisterType('donor')}
+              className={`px-4 py-2 rounded-md transition-colors ${
+                registerType === 'donor' 
+                  ? 'bg-emerald-600 text-white' 
+                  : 'text-emerald-800 hover:bg-emerald-200'
+              }`}
+            >
+              Donor
+            </button>
+            <button 
+              onClick={() => setRegisterType('organization')}
+              className={`px-4 py-2 rounded-md transition-colors ${
+                registerType === 'organization' 
+                  ? 'bg-emerald-600 text-white' 
+                  : 'text-emerald-800 hover:bg-emerald-200'
+              }`}
+            >
+              Organization
+            </button>
+          </div>
+        </div>
+        
         <h2 className="text-2xl font-bold text-emerald-900 mb-6">
-          Register as {formData.type === 'donor' ? 'Donor' : 'Organization'}
+          Register as {registerType === 'donor' ? 'Donor' : 'Organization'}
         </h2>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
@@ -99,6 +140,7 @@ const Register = () => {
             {errors.name && <p className="text-red-500 text-sm mt-1">{errors.name}</p>}
           </div>
 
+          {/* Rest of the form remains unchanged */}
           <div>
             <label className="block text-sm font-medium text-gray-700">Email</label>
             <input
@@ -163,17 +205,16 @@ const Register = () => {
             <div className="text-red-500 text-sm text-center">{errors.submit}</div>
           )}
 
-          <button
+          <Button
+            label="Register"
             type="submit"
             className="w-full py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-emerald-600 hover:bg-emerald-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500"
-          >
-            Register
-          </button>
+          />
         </form>
 
         <p className="mt-4 text-center text-sm text-gray-600">
           Already have an account?{' '}
-          <Link to={`/auth/login?type=${formData.type}`} className="font-medium text-emerald-600 hover:text-emerald-500">
+          <Link to={`/auth/login?type=${registerType}`} className="font-medium text-emerald-600 hover:text-emerald-500">
             Login
           </Link>
         </p>

@@ -26,6 +26,14 @@ const DonorDashboard = () => {
   useEffect(() => {
     const fetchData = async () => {
       setInitialLoading(true);
+      
+      // Check if user is authenticated
+      if (!user || !user.token || !user.id) {
+        setError('Authentication error. Please log in again.');
+        setInitialLoading(false);
+        return;
+      }
+      
       try {
         // Fetch donations
         const donationsResponse = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/donations`, {
@@ -59,7 +67,7 @@ const DonorDashboard = () => {
     };
 
     fetchData();
-  }, [user.token, user.id]);
+  }, [user?.token, user?.id]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -75,6 +83,13 @@ const DonorDashboard = () => {
     setError('');
     setSuccess('');
     setLoading(true);
+    
+    // Check if user is authenticated
+    if (!user || !user.token) {
+      setError('Authentication error. Please log in again.');
+      setLoading(false);
+      return;
+    }
     
     if (!newDonation.items || !newDonation.quantity || !newDonation.pickupTime || !newDonation.location) {
       setError('Please fill out all required fields');
@@ -128,7 +143,7 @@ const DonorDashboard = () => {
           animate={{ opacity: 1, y: 0 }}
           className="bg-white rounded-xl shadow-lg p-6 mb-8 transition-all hover:shadow-xl"
         >
-          <h1 className="text-2xl font-bold text-emerald-900 mb-2">Welcome, {user.name}! 👋</h1>
+          <h1 className="text-2xl font-bold text-emerald-900 mb-2">Welcome, {user?.name || 'User'}! 👋</h1>
           <p className="text-gray-600 mb-6">Here's an overview of your donation activity</p>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
             <motion.div 
