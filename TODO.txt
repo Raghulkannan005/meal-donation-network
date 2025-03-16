@@ -15,9 +15,9 @@ Done:
 ✅ Add loading states
 ✅ Add error handling
 ✅ Add form validation
+✅ Add organization dashboard
 
 Needed:
-⬜ Add organization dashboard
 ⬜ Implement donation search/filter
 ⬜ Add donation tracking map
 ⬜ Create statistics/analytics page
