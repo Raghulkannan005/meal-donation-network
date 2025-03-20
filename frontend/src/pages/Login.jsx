@@ -42,6 +42,7 @@ const Login = () => {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({ ...formData, type: loginType }),
+        // Use credentials: 'include' only for same-site or specific domains
         credentials: 'include'
       });
 

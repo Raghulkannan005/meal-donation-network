@@ -3,6 +3,8 @@ import cors from 'cors';
 import { protect } from './middleware/auth.js';
 import { User, Donation, Contact } from './models/index.js';
 import { generateToken, hashPassword, comparePassword } from './utils/auth.js';
+import { validateDonation, validateContact } from './middleware/validation.js';
+import logger from './utils/logger.js';
 
 const app = express();
 app.use(express.json());
@@ -23,7 +25,7 @@ const corsOptions = {
     ];
     
     if (!origin || allowedOrigins.includes(origin)) {
-      callback(null, true);
+      callback(null, origin);  // Return the specific origin instead of true
     } else {
       callback(new Error('Not allowed by CORS'));
     }
@@ -70,7 +72,7 @@ app.post('/api/auth/register', async (req, res) => {
       token: generateToken(user)
     });
   } catch (error) {
-    console.error('Registration error:', error);
+    logger.error('Registration error:', error);
     res.status(500).json({ message: 'Server error' });
   }
 });
@@ -92,18 +94,18 @@ app.post('/api/auth/login', async (req, res) => {
       res.status(401).json({ message: 'Invalid credentials' });
     }
   } catch (error) {
-    console.error('Login error:', error);
+    logger.error('Login error:', error);
     res.status(500).json({ message: 'Server error' });
   }
 });
 
 // Contact Route - Moved outside protected routes
-app.post('/api/contact', async (req, res) => {
+app.post('/api/contact', validateContact, async (req, res) => {
   try {
     const contact = await Contact.create(req.body);
     res.status(201).json(contact);
   } catch (error) {
-    console.error('Contact error:', error);
+    logger.error('Contact submission error', error);
     res.status(500).json({ message: 'Server error' });
   }
 });
@@ -112,7 +114,7 @@ app.post('/api/contact', async (req, res) => {
 app.use(protect);
 
 // Donation Routes
-app.post('/api/donations', async (req, res) => {
+app.post('/api/donations', protect, validateDonation, async (req, res) => {
   try {
     if (!req.body.items || !req.body.quantity || !req.body.pickupTime || !req.body.location) {
       return res.status(400).json({ message: 'Missing required fields' });
@@ -124,7 +126,7 @@ app.post('/api/donations', async (req, res) => {
     });
     res.status(201).json(donation);
   } catch (error) {
-    console.error('Error creating donation:', error);
+    logger.error('Error creating donation:', error);
     res.status(500).json({ message: 'Failed to create donation', error: error.message });
   }
 });
@@ -136,7 +138,7 @@ app.get('/api/donations', async (req, res) => {
       .populate('organization', 'name');
     res.json(donations);
   } catch (error) {
-    console.error('Error fetching donations:', error);
+    logger.error('Error fetching donations:', error);
     res.status(500).json({ message: 'Server error' });
   }
 });
@@ -158,7 +160,7 @@ app.put('/api/donations/:id/accept', async (req, res) => {
     
     res.json(donation);
   } catch (error) {
-    console.error('Error accepting donation:', error);
+    logger.error('Error accepting donation:', error);
     res.status(500).json({ message: 'Server error' });
   }
 });
@@ -180,7 +182,7 @@ app.put('/api/donations/:id/distribute', async (req, res) => {
     
     res.json(donation);
   } catch (error) {
-    console.error('Error distributing donation:', error);
+    logger.error('Error distributing donation:', error);
     res.status(500).json({ message: 'Server error' });
   }
 });
@@ -194,7 +196,7 @@ app.get('/api/users/:id/stats', async (req, res) => {
 
     res.json({ totalDonations, activeDonations, completedDonations });
   } catch (error) {
-    console.error('Error fetching stats:', error);
+    logger.error('Error fetching stats:', error);
     res.status(500).json({ message: 'Server error' });
   }
 });
@@ -232,7 +234,7 @@ app.put('/api/users/:id', async (req, res) => {
       type: user.type
     });
   } catch (error) {
-    console.error('Error updating user:', error);
+    logger.error('Error updating user:', error);
     res.status(500).json({ message: 'Internal server error' });
   }
 });
