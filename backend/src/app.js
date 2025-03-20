@@ -11,7 +11,7 @@ app.use(express.json());
 const corsOptions = {
   origin: function (origin, callback) {
     const allowedOrigins = [
-      'http://localhost:5173', 
+      'http://localhost:5173',
       'https://mealmesh.vercel.app',
       'https://mealmesh-backend.vercel.app'
     ];

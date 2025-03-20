@@ -20,22 +20,22 @@ const Nav = () => {
   return (
     <nav className="bg-white/80 backdrop-blur-sm shadow-sm fixed w-full top-0 z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between h-16">
-          {/* Logo */}
+        <div className="flex justify-between h-14 sm:h-16">
+          {/* Logo - made more responsive */}
           <div className="flex items-center">
             <Link to="/">
               <motion.div 
-                className="w-10 h-10 bg-emerald-600 rounded-full flex items-center justify-center"
+                className="w-8 h-8 sm:w-10 sm:h-10 bg-emerald-600 rounded-full flex items-center justify-center"
                 whileHover={{ scale: 1.05 }}
               >
-                <span className="text-xl font-bold text-white">M</span>
+                <span className="text-lg sm:text-xl font-bold text-white">M</span>
               </motion.div>
             </Link>
-            <span className="ml-3 text-xl font-semibold text-emerald-900">MealMesh</span>
+            <span className="ml-2 sm:ml-3 text-lg sm:text-xl font-semibold text-emerald-900">MealMesh</span>
           </div>
 
-          {/* Desktop Navigation */}
-          <div className="hidden sm:flex items-center space-x-8 relative">
+          {/* Desktop Navigation - remains hidden on small screens */}
+          <div className="hidden sm:flex items-center space-x-4 md:space-x-8 relative">
             <Link to="/" className="text-emerald-800 hover:text-emerald-600">
               Home
             </Link>
@@ -106,113 +106,121 @@ const Nav = () => {
             )}
           </div>
 
-          {/* Mobile Menu Button */}
+          {/* Mobile Menu Button - better tap target */}
           <button
             onClick={() => setIsOpen(!isOpen)}
-            className="sm:hidden text-emerald-800 hover:text-emerald-600"
+            className="sm:hidden flex items-center justify-center w-10 h-10 text-emerald-800 hover:text-emerald-600"
+            aria-label="Toggle menu"
           >
-            {isOpen ? '✕' : '☰'}
+            {isOpen ? 
+              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              </svg> : 
+              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+              </svg>
+            }
           </button>
         </div>
       </div>
 
-      {/* Mobile Menu */}
+      {/* Mobile Menu - improved spacing and touch targets */}
       {isOpen && (
         <motion.div 
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           className="sm:hidden bg-white/90 backdrop-blur-sm border-t border-emerald-100"
         >
-          
-<div className="px-4 py-2 space-y-1">
-<Link
-  to="/"
-  className="block py-2 text-emerald-800 hover:text-emerald-600"
-  onClick={() => setIsOpen(false)}
->
-  Home
-</Link>
-<Link
-  to="/about"
-  className="block py-2 text-emerald-800 hover:text-emerald-600"
-  onClick={() => setIsOpen(false)}
->
-  About
-</Link>
-<Link
-  to="/donors"
-  className="block py-2 text-emerald-800 hover:text-emerald-600"
-  onClick={() => setIsOpen(false)}
->
-  Donors
-</Link>
-<Link
-  to="/organizations"
-  className="block py-2 text-emerald-800 hover:text-emerald-600"
-  onClick={() => setIsOpen(false)}
->
-  Organizations
-</Link>
-<Link
-  to="/food-safety"
-  className="block py-2 text-emerald-800 hover:text-emerald-600"
-  onClick={() => setIsOpen(false)}
->
-  Food Safety
-</Link>
-<Link
-  to="/contact"
-  className="block py-2 text-emerald-800 hover:text-emerald-600"
-  onClick={() => setIsOpen(false)}
->
-  Contact
-</Link>
+          <div className="px-4 py-2 space-y-0">
+            {/* Mobile nav links with improved tap targets */}
+            <Link
+              to="/"
+              className="block py-3 text-emerald-800 hover:text-emerald-600 border-b border-gray-100"
+              onClick={() => setIsOpen(false)}
+            >
+              Home
+            </Link>
+            <Link
+              to="/about"
+              className="block py-3 text-emerald-800 hover:text-emerald-600 border-b border-gray-100"
+              onClick={() => setIsOpen(false)}
+            >
+              About
+            </Link>
+            <Link
+              to="/donors"
+              className="block py-3 text-emerald-800 hover:text-emerald-600 border-b border-gray-100"
+              onClick={() => setIsOpen(false)}
+            >
+              Donors
+            </Link>
+            <Link
+              to="/organizations"
+              className="block py-3 text-emerald-800 hover:text-emerald-600 border-b border-gray-100"
+              onClick={() => setIsOpen(false)}
+            >
+              Organizations
+            </Link>
+            <Link
+              to="/food-safety"
+              className="block py-3 text-emerald-800 hover:text-emerald-600 border-b border-gray-100"
+              onClick={() => setIsOpen(false)}
+            >
+              Food Safety
+            </Link>
+            <Link
+              to="/contact"
+              className="block py-3 text-emerald-800 hover:text-emerald-600 border-b border-gray-100"
+              onClick={() => setIsOpen(false)}
+            >
+              Contact
+            </Link>
 
-{user ? (
-  <>
-    <Link
-      to={`/${user.type}/dashboard`}
-      className="block py-2 text-emerald-800 hover:text-emerald-600"
-      onClick={() => setIsOpen(false)}
-    >
-      Dashboard
-    </Link>
-    <Link
-      to="/profile"
-      className="block py-2 text-emerald-800 hover:text-emerald-600"
-      onClick={() => setIsOpen(false)}
-    >
-      Profile
-    </Link>
-    <button
-      onClick={() => {
-        handleLogout();
-        setIsOpen(false);
-      }}
-      className="block w-full text-left py-2 text-emerald-800 hover:text-emerald-600"
-    >
-      Logout
-    </button>
-  </>
-) : (
-  <>
-    <Link
-      to="/auth/login?type=donor"
-      className="block py-2 text-emerald-800 hover:text-emerald-600"
-      onClick={() => setIsOpen(false)}
-    >
-      Login
-    </Link>
-    <Link
-      to="/auth/register?type=donor"
-      className="block py-2 text-emerald-800 hover:text-emerald-600"
-      onClick={() => setIsOpen(false)}
-    >
-      Register
-    </Link>
-  </>
-)}
-</div>
+            {user ? (
+              <>
+                <Link
+                  to={`/${user.type}/dashboard`}
+                  className="block py-3 text-emerald-800 hover:text-emerald-600 border-b border-gray-100"
+                  onClick={() => setIsOpen(false)}
+                >
+                  Dashboard
+                </Link>
+                <Link
+                  to="/profile"
+                  className="block py-3 text-emerald-800 hover:text-emerald-600 border-b border-gray-100"
+                  onClick={() => setIsOpen(false)}
+                >
+                  Profile
+                </Link>
+                <button
+                  onClick={() => {
+                    handleLogout();
+                    setIsOpen(false);
+                  }}
+                  className="block w-full text-left py-3 text-emerald-800 hover:text-emerald-600 border-b border-gray-100"
+                >
+                  Logout
+                </button>
+              </>
+            ) : (
+              <>
+                <Link
+                  to="/auth/login?type=donor"
+                  className="block py-3 text-emerald-800 hover:text-emerald-600 border-b border-gray-100"
+                  onClick={() => setIsOpen(false)}
+                >
+                  Login
+                </Link>
+                <Link
+                  to="/auth/register?type=donor"
+                  className="block py-3 text-emerald-800 hover:text-emerald-600 border-b border-gray-100"
+                  onClick={() => setIsOpen(false)}
+                >
+                  Register
+                </Link>
+              </>
+            )}
+          </div>
         </motion.div>
       )}
     </nav>

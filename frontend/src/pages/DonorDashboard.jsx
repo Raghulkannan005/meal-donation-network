@@ -135,65 +135,67 @@ const DonorDashboard = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-emerald-100 to-white pt-20 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-emerald-100 to-white pt-16 md:pt-20 px-3 sm:px-6">
       <div className="max-w-7xl mx-auto">
         {/* Welcome Section */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="bg-white rounded-xl shadow-lg p-6 mb-8 transition-all hover:shadow-xl"
+          className="bg-white rounded-xl shadow-lg p-4 sm:p-6 mb-4 sm:mb-8 transition-all hover:shadow-xl"
         >
-          <h1 className="text-2xl font-bold text-emerald-900 mb-2">Welcome, {user?.name || 'User'}! 👋</h1>
-          <p className="text-gray-600 mb-6">Here's an overview of your donation activity</p>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
+          <h1 className="text-xl sm:text-2xl font-bold text-emerald-900 mb-2">Welcome, {user?.name || 'User'}! 👋</h1>
+          <p className="text-sm sm:text-base text-gray-600 mb-4 sm:mb-6">Here's an overview of your donation activity</p>
+          
+          {/* Stats cards - Now properly responsive */}
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4 mt-4">
             <motion.div 
               whileHover={{ scale: 1.03 }} 
               transition={{ duration: 0.2 }}
-              className="bg-emerald-50 p-4 rounded-lg border border-emerald-100 hover:border-emerald-200 cursor-pointer"
+              className="bg-emerald-50 p-3 sm:p-4 rounded-lg border border-emerald-100 hover:border-emerald-200"
             >
               <div className="flex items-center justify-between">
-                <p className="text-sm text-emerald-600">Total Donations</p>
+                <p className="text-xs sm:text-sm text-emerald-600">Total Donations</p>
                 <span className="text-emerald-500 bg-emerald-100 p-1 rounded-full">📦</span>
               </div>
-              <p className="text-2xl font-bold text-emerald-900">{stats.totalDonations}</p>
+              <p className="text-lg sm:text-2xl font-bold text-emerald-900">{stats.totalDonations}</p>
             </motion.div>
             <motion.div 
               whileHover={{ scale: 1.03 }} 
               transition={{ duration: 0.2 }}
-              className="bg-emerald-50 p-4 rounded-lg border border-emerald-100 hover:border-emerald-200 cursor-pointer"
+              className="bg-emerald-50 p-3 sm:p-4 rounded-lg border border-emerald-100 hover:border-emerald-200 cursor-pointer"
             >
               <div className="flex items-center justify-between">
-                <p className="text-sm text-emerald-600">Active Requests</p>
+                <p className="text-xs sm:text-sm text-emerald-600">Active Requests</p>
                 <span className="text-emerald-500 bg-emerald-100 p-1 rounded-full">🔄</span>
               </div>
-              <p className="text-2xl font-bold text-emerald-900">{stats.activeDonations}</p>
+              <p className="text-lg sm:text-2xl font-bold text-emerald-900">{stats.activeDonations}</p>
             </motion.div>
             <motion.div 
               whileHover={{ scale: 1.03 }} 
               transition={{ duration: 0.2 }}
-              className="bg-emerald-50 p-4 rounded-lg border border-emerald-100 hover:border-emerald-200 cursor-pointer"
+              className="bg-emerald-50 p-3 sm:p-4 rounded-lg border border-emerald-100 hover:border-emerald-200 cursor-pointer"
             >
               <div className="flex items-center justify-between">
-                <p className="text-sm text-emerald-600">Completed Donations</p>
+                <p className="text-xs sm:text-sm text-emerald-600">Completed Donations</p>
                 <span className="text-emerald-500 bg-emerald-100 p-1 rounded-full">✅</span>
               </div>
-              <p className="text-2xl font-bold text-emerald-900">{stats.completedDonations}</p>
+              <p className="text-lg sm:text-2xl font-bold text-emerald-900">{stats.completedDonations}</p>
             </motion.div>
           </div>
         </motion.div>
 
-        {/* New Donation Form */}
+        {/* New Donation Form - Responsive grid */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2 }}
-          className="bg-white rounded-xl shadow-lg p-6 mb-8 transition-all hover:shadow-xl"
+          className="bg-white rounded-xl shadow-lg p-4 sm:p-6 mb-4 sm:mb-8 transition-all hover:shadow-xl"
         >
-          <h2 className="text-xl font-semibold text-emerald-900 mb-4 flex items-center">
+          <h2 className="text-lg sm:text-xl font-semibold text-emerald-900 mb-3 sm:mb-4 flex items-center">
             <span className="mr-2">🍽️</span> Create New Donation
           </h2>
-          <form onSubmit={handleSubmit} className="space-y-4">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <form onSubmit={handleSubmit} className="space-y-3 sm:space-y-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">Food Items <span className="text-red-500">*</span></label>
                 <input
@@ -217,7 +219,7 @@ const DonorDashboard = () => {
                 />
               </div>
             </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">Pickup Time <span className="text-red-500">*</span></label>
                 <input
@@ -291,37 +293,39 @@ const DonorDashboard = () => {
               <p className="text-sm text-gray-400">Your recent donations will appear here</p>
             </div>
           ) : (
-            <div className="overflow-x-auto rounded-lg border border-gray-200">
-              <table className="min-w-full divide-y divide-gray-200">
-                <thead className="bg-gray-50">
-                  <tr>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Items</th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Location</th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
-                  </tr>
-                </thead>
-                <tbody className="bg-white divide-y divide-gray-200">
-                  {recentDonations.map((donation) => (
-                    <tr key={donation._id} className="hover:bg-gray-50 transition-colors">
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{formatDate(donation.createdAt)}</td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{donation.items}</td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{donation.location}</td>
-                      <td className="px-6 py-4 whitespace-nowrap">
-                        <span className={`px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${
-                          donation.status === 'Distributed' 
-                            ? 'bg-green-100 text-green-800' 
-                            : donation.status === 'Accepted' 
-                              ? 'bg-blue-100 text-blue-800'
-                              : 'bg-yellow-100 text-yellow-800'
-                        }`}>
-                          {donation.status}
-                        </span>
-                      </td>
+            <div className="overflow-x-auto -mx-4 sm:mx-0">
+              <div className="inline-block min-w-full align-middle p-4 sm:p-0">
+                <table className="min-w-full divide-y divide-gray-200">
+                  <thead className="bg-gray-50">
+                    <tr>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Items</th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Location</th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
+                  </thead>
+                  <tbody className="bg-white divide-y divide-gray-200">
+                    {recentDonations.map((donation) => (
+                      <tr key={donation._id} className="hover:bg-gray-50 transition-colors">
+                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{formatDate(donation.createdAt)}</td>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{donation.items}</td>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{donation.location}</td>
+                        <td className="px-6 py-4 whitespace-nowrap">
+                          <span className={`px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${
+                            donation.status === 'Distributed' 
+                              ? 'bg-green-100 text-green-800' 
+                              : donation.status === 'Accepted' 
+                                ? 'bg-blue-100 text-blue-800'
+                                : 'bg-yellow-100 text-yellow-800'
+                          }`}>
+                            {donation.status}
+                          </span>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
             </div>
           )}
         </motion.div>

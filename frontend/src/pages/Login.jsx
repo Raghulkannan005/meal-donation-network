@@ -72,17 +72,17 @@ const Login = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-emerald-100 to-white pt-20">
+    <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-emerald-100 to-white pt-16 md:pt-20 px-4">
       <motion.div 
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="max-w-md mx-auto bg-white p-8 rounded-xl shadow-lg"
+        className="max-w-md mx-auto bg-white p-5 sm:p-8 rounded-xl shadow-lg"
       >
         <div className="flex justify-center mb-6">
-          <div className="flex p-1 bg-emerald-100 rounded-lg">
+          <div className="flex p-1 bg-emerald-100 rounded-lg w-full max-w-xs">
             <button 
               onClick={() => setLoginType('donor')}
-              className={`px-4 py-2 rounded-md transition-colors ${
+              className={`px-3 py-2 text-sm sm:text-base sm:px-4 rounded-md transition-colors flex-1 ${
                 loginType === 'donor' 
                   ? 'bg-emerald-600 text-white' 
                   : 'text-emerald-800 hover:bg-emerald-200'
@@ -92,7 +92,7 @@ const Login = () => {
             </button>
             <button 
               onClick={() => setLoginType('organization')}
-              className={`px-4 py-2 rounded-md transition-colors ${
+              className={`px-3 py-2 text-sm sm:text-base sm:px-4 rounded-md transition-colors flex-1 ${
                 loginType === 'organization' 
                   ? 'bg-emerald-600 text-white' 
                   : 'text-emerald-800 hover:bg-emerald-200'
@@ -103,7 +103,7 @@ const Login = () => {
           </div>
         </div>
         
-        <h2 className="text-2xl font-bold text-emerald-900 mb-6">
+        <h2 className="text-xl sm:text-2xl font-bold text-emerald-900 mb-4 sm:mb-6 text-center">
           Login as {loginType === 'donor' ? 'Donor' : 'Organization'}
         </h2>
         
