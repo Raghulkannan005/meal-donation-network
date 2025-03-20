@@ -3,7 +3,7 @@ import dotenv from 'dotenv';
 
 dotenv.config();
 
-// Cache the database connection
+// Improved connection with error handling
 let cachedConnection = null;
 
 export const connectDB = async () => {
@@ -12,21 +12,28 @@ export const connectDB = async () => {
   }
 
   try {
+    // Add more connection options for better stability
     const conn = await mongoose.connect(process.env.MONGO_URI, {
-      // These are MongoDB connection options - they help maintain stable connection
-      serverSelectionTimeoutMS: 5000,
-      maxPoolSize: 10
+      serverSelectionTimeoutMS: 10000,
+      maxPoolSize: 10,
+      socketTimeoutMS: 45000,
+      family: 4  // Force IPv4
     });
     
-    cachedConnection = conn;
     console.log(`MongoDB Connected: ${conn.connection.host}`);
+    cachedConnection = conn;
     return conn;
   } catch (error) {
     console.error(`Error connecting to MongoDB: ${error.message}`);
-    process.exit(1);
+    // Don't exit process in production - allows Vercel to handle errors
+    if (process.env.NODE_ENV !== 'production') {
+      process.exit(1);
+    }
+    throw error; // Propagate error for handling
   }
 };
 
+// Export models directly
 export { default as User } from './models/User.js';
 export { default as Donation } from './models/Donation.js';
 export { default as Organization } from './models/Organization.js';

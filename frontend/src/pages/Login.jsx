@@ -51,8 +51,16 @@ const Login = () => {
       // For debugging, log response details
       console.log('Login response status:', response.status);
       
+      // Handle non-JSON responses
+      const contentType = response.headers.get("content-type");
+      if (!contentType || !contentType.includes("application/json")) {
+        const textResponse = await response.text();
+        console.error('Non-JSON response:', textResponse);
+        throw new Error(`Server returned non-JSON response: ${textResponse.substring(0, 100)}...`);
+      }
+      
       const data = await response.json();
-      console.log('Login response data:', data);
+      console.log('Login response data:', data);      git add . && git commit -m "updates" && git push
 
       if (response.ok) {
         login(data); // Update auth context
@@ -68,7 +76,11 @@ const Login = () => {
       }
     } catch (err) {
       console.error('Login error details:', err);
-      setError('Connection error. Please try again later.');
+      if (err.message && err.message.includes('Server returned non-JSON response')) {
+        setError('The server is experiencing issues. Please try again later.');
+      } else {
+        setError('Connection error. Please try again later.');
+      }
     } finally {
       setLoading(false);
     }

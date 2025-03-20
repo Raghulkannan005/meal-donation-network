@@ -47,6 +47,13 @@ app.post('/api/auth/register', async (req, res) => {
   try {
     const { name, email, password, phone, address, type } = req.body;
     
+    if (!name || !email || !password || !phone || !address || !type) {
+      return res.status(400).json({ 
+        message: 'All fields are required',
+        requiredFields: ['name', 'email', 'password', 'phone', 'address', 'type']
+      });
+    }
+    
     const existingUser = await User.findOne({ email });
     if (existingUser) {
       return res.status(400).json({ message: 'User already exists' });
@@ -71,29 +78,44 @@ app.post('/api/auth/register', async (req, res) => {
     });
   } catch (error) {
     logger.error('Registration error:', error);
-    res.status(500).json({ message: 'Server error' });
+    res.status(500).json({ message: 'Server error during registration' });
   }
 });
 
 app.post('/api/auth/login', async (req, res) => {
   try {
     const { email, password, type } = req.body;
+    
+    if (!email || !password || !type) {
+      return res.status(400).json({ message: 'Email, password and type are required' });
+    }
+    
     const user = await User.findOne({ email, type });
 
-    if (user && await comparePassword(password, user.password)) {
-      res.json({
-        id: user._id,
-        name: user.name,
-        email: user.email,
-        type: user.type,
-        token: generateToken(user)
-      });
-    } else {
-      res.status(401).json({ message: 'Invalid credentials' });
+    if (!user) {
+      return res.status(401).json({ message: 'Invalid credentials' });
     }
+    
+    const isPasswordMatch = await comparePassword(password, user.password);
+    
+    if (!isPasswordMatch) {
+      return res.status(401).json({ message: 'Invalid credentials' });
+    }
+
+    // Generate JWT token
+    const token = generateToken(user);
+    
+    // Send user data and token
+    res.json({
+      id: user._id,
+      name: user.name,
+      email: user.email,
+      type: user.type,
+      token
+    });
   } catch (error) {
     logger.error('Login error:', error);
-    res.status(500).json({ message: 'Server error' });
+    res.status(500).json({ message: 'Server error during login' });
   }
 });
 
