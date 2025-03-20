@@ -7,27 +7,36 @@ import { generateToken, hashPassword, comparePassword } from './utils/auth.js';
 const app = express();
 app.use(express.json());
 
-// Updated CORS configuration for Vercel deployment
+// Updated CORS configuration for all environments
 const corsOptions = {
   origin: function (origin, callback) {
+    // Allow any origin in development
+    if (process.env.NODE_ENV === 'development') {
+      return callback(null, true);
+    }
+    
     const allowedOrigins = [
       'http://localhost:5173',
       'https://mealmesh.vercel.app',
+      'https://meal-donate.vercel.app',
       'https://mealmesh-backend.vercel.app'
     ];
-    if (!origin || allowedOrigins.indexOf(origin) !== -1) {
+    
+    if (!origin || allowedOrigins.includes(origin)) {
       callback(null, true);
     } else {
       callback(new Error('Not allowed by CORS'));
     }
   },
+  credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization'],
-  credentials: true
+  allowedHeaders: ['Content-Type', 'Authorization']
 };
 
-// Replace the custom CORS middleware with the cors package
 app.use(cors(corsOptions));
+
+// Add OPTIONS handling for preflight requests
+app.options('*', cors(corsOptions));
 
 app.get('/api/health', (req, res) => {
   res.status(200).json({ status: 'ok' });
@@ -86,20 +95,34 @@ app.post('/api/auth/login', async (req, res) => {
   }
 });
 
-// Protected Routes
+// Contact Route - Moved outside protected routes
+app.post('/api/contact', async (req, res) => {
+  try {
+    const contact = await Contact.create(req.body);
+    res.status(201).json(contact);
+  } catch (error) {
+    res.status(500).json({ message: 'Server error' });
+  }
+});
 
+// Protected Routes
 app.use(protect);
 
 // Donation Routes
 app.post('/api/donations', async (req, res) => {
   try {
+    if (!req.body.items || !req.body.quantity || !req.body.pickupTime || !req.body.location) {
+      return res.status(400).json({ message: 'Missing required fields' });
+    }
+    
     const donation = await Donation.create({
       ...req.body,
       donor: req.user.id
     });
     res.status(201).json(donation);
   } catch (error) {
-    res.status(500).json({ message: 'Server error' });
+    console.error('Error creating donation:', error);
+    res.status(500).json({ message: 'Failed to create donation', error: error.message });
   }
 });
 

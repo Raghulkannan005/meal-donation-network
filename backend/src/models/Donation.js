@@ -5,6 +5,7 @@ const donationSchema = new mongoose.Schema({
   items: { type: String, required: true },
   quantity: { type: String, required: true },
   pickupTime: { type: Date, required: true },
+  location: { type: String, required: true },
   status: { 
     type: String, 
     enum: ['Available', 'Accepted', 'Distributed'], 
