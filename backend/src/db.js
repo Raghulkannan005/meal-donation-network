@@ -1,20 +1,33 @@
 import mongoose from 'mongoose';
-import User from './models/User.js';
-import Donation from './models/Donation.js';
-import Organization from './models/Organization.js';
-import Contact from './models/Contact.js';
-
 import dotenv from 'dotenv';
+
 dotenv.config();
 
+// Cache the database connection
+let cachedConnection = null;
+
 export const connectDB = async () => {
+  if (cachedConnection) {
+    return cachedConnection;
+  }
+
   try {
-    const conn = await mongoose.connect(process.env.MONGO_URI);
+    const conn = await mongoose.connect(process.env.MONGO_URI, {
+      // These are MongoDB connection options - they help maintain stable connection
+      serverSelectionTimeoutMS: 5000,
+      maxPoolSize: 10
+    });
+    
+    cachedConnection = conn;
     console.log(`MongoDB Connected: ${conn.connection.host}`);
+    return conn;
   } catch (error) {
-    console.error(`Error: ${error.message}`);
+    console.error(`Error connecting to MongoDB: ${error.message}`);
     process.exit(1);
   }
 };
 
-export { User, Donation, Organization, Contact };
+export { default as User } from './models/User.js';
+export { default as Donation } from './models/Donation.js';
+export { default as Organization } from './models/Organization.js';
+export { default as Contact } from './models/Contact.js';

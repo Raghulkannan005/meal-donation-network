@@ -70,6 +70,7 @@ app.post('/api/auth/register', async (req, res) => {
       token: generateToken(user)
     });
   } catch (error) {
+    console.error('Registration error:', error);
     res.status(500).json({ message: 'Server error' });
   }
 });
@@ -91,6 +92,7 @@ app.post('/api/auth/login', async (req, res) => {
       res.status(401).json({ message: 'Invalid credentials' });
     }
   } catch (error) {
+    console.error('Login error:', error);
     res.status(500).json({ message: 'Server error' });
   }
 });
@@ -101,6 +103,7 @@ app.post('/api/contact', async (req, res) => {
     const contact = await Contact.create(req.body);
     res.status(201).json(contact);
   } catch (error) {
+    console.error('Contact error:', error);
     res.status(500).json({ message: 'Server error' });
   }
 });
@@ -133,6 +136,7 @@ app.get('/api/donations', async (req, res) => {
       .populate('organization', 'name');
     res.json(donations);
   } catch (error) {
+    console.error('Error fetching donations:', error);
     res.status(500).json({ message: 'Server error' });
   }
 });
@@ -147,8 +151,14 @@ app.put('/api/donations/:id/accept', async (req, res) => {
       },
       { new: true }
     );
+    
+    if (!donation) {
+      return res.status(404).json({ message: 'Donation not found' });
+    }
+    
     res.json(donation);
   } catch (error) {
+    console.error('Error accepting donation:', error);
     res.status(500).json({ message: 'Server error' });
   }
 });
@@ -163,18 +173,14 @@ app.put('/api/donations/:id/distribute', async (req, res) => {
       },
       { new: true }
     );
+    
+    if (!donation) {
+      return res.status(404).json({ message: 'Donation not found' });
+    }
+    
     res.json(donation);
   } catch (error) {
-    res.status(500).json({ message: 'Server error' });
-  }
-});
-
-// Contact Routes
-app.post('/api/contact', async (req, res) => {
-  try {
-    const contact = await Contact.create(req.body);
-    res.status(201).json(contact);
-  } catch (error) {
+    console.error('Error distributing donation:', error);
     res.status(500).json({ message: 'Server error' });
   }
 });
@@ -188,6 +194,7 @@ app.get('/api/users/:id/stats', async (req, res) => {
 
     res.json({ totalDonations, activeDonations, completedDonations });
   } catch (error) {
+    console.error('Error fetching stats:', error);
     res.status(500).json({ message: 'Server error' });
   }
 });
@@ -225,6 +232,7 @@ app.put('/api/users/:id', async (req, res) => {
       type: user.type
     });
   } catch (error) {
+    console.error('Error updating user:', error);
     res.status(500).json({ message: 'Internal server error' });
   }
 });

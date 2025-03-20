@@ -6,15 +6,15 @@ dotenv.config();
 
 const port = process.env.PORT || 3000;
 
-const startServer = async () => {
-  try {
-    await connectDB();
-    app.listen(port, () => {
-      console.log(`Server started at port:${port}`);
-    });
-  } catch (error) {
-    console.error('Failed to start server:', error);
-  }
-};
+// Connect to database
+connectDB();
 
-startServer();
+// For local development
+if (process.env.NODE_ENV !== 'production') {
+  app.listen(port, () => {
+    console.log(`Server started at port:${port}`);
+  });
+}
+
+// For serverless environments like Vercel
+export default app;
