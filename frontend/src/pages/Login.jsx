@@ -60,7 +60,7 @@ const Login = () => {
       }
       
       const data = await response.json();
-      console.log('Login response data:', data);      git add . && git commit -m "updates" && git push
+      console.log('Login response data:', data);
 
       if (response.ok) {
         login(data); // Update auth context

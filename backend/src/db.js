@@ -14,7 +14,7 @@ export const connectDB = async () => {
   try {
     // Add more connection options for better stability
     const conn = await mongoose.connect(process.env.MONGO_URI, {
-      serverSelectionTimeoutMS: 10000,
+      serverSelectionTimeoutMS: 30000,
       maxPoolSize: 10,
       socketTimeoutMS: 45000,
       family: 4  // Force IPv4
@@ -32,6 +32,8 @@ export const connectDB = async () => {
     throw error; // Propagate error for handling
   }
 };
+
+export default mongoose;
 
 // Export models directly
 export { default as User } from './models/User.js';

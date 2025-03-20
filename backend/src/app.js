@@ -5,8 +5,28 @@ import { User, Donation, Contact } from './models/index.js';
 import { generateToken, hashPassword, comparePassword } from './utils/auth.js';
 import { validateDonation, validateContact } from './middleware/validation.js';
 import logger from './utils/logger.js';
+import { connectDB } from './db.js';
 
 const app = express();
+
+// Connect to MongoDB at app startup
+try {
+  await connectDB();
+  console.log('Database connected successfully');
+} catch (error) {
+  console.error('Database connection failed:', error.message);
+}
+
+// Error handling middleware (place at the beginning)
+app.use((req, res, next) => {
+  try {
+    next();
+  } catch (error) {
+    logger.error('Unhandled error in middleware:', error);
+    res.status(500).json({ message: 'Server error occurred' });
+  }
+});
+
 app.use(express.json());
 
 // Updated CORS configuration for all environments
@@ -39,7 +59,7 @@ app.use(cors(corsOptions));
 app.options('*', cors(corsOptions));
 
 app.get('/api/health', (req, res) => {
-  res.status(200).json({ status: 'ok' });
+  res.status(200).json({ status: 'ok', environment: process.env.NODE_ENV });
 });
 
 // Auth Routes
@@ -84,6 +104,9 @@ app.post('/api/auth/register', async (req, res) => {
 
 app.post('/api/auth/login', async (req, res) => {
   try {
+    // Log incoming request
+    logger.debug('Login request received:', req.body);
+    
     const { email, password, type } = req.body;
     
     if (!email || !password || !type) {
@@ -115,7 +138,7 @@ app.post('/api/auth/login', async (req, res) => {
     });
   } catch (error) {
     logger.error('Login error:', error);
-    res.status(500).json({ message: 'Server error during login' });
+    res.status(500).json({ message: 'Server error during login', error: error.message });
   }
 });
 
@@ -257,6 +280,15 @@ app.put('/api/users/:id', async (req, res) => {
     logger.error('Error updating user:', error);
     res.status(500).json({ message: 'Internal server error' });
   }
+});
+
+// Global error handler (place at the end)
+app.use((err, req, res, next) => {
+  logger.error('Global error handler:', err);
+  res.status(500).json({ 
+    message: 'An internal server error occurred',
+    error: process.env.NODE_ENV === 'development' ? err.message : 'Server error' 
+  });
 });
 
 export default app;
