@@ -7,25 +7,27 @@ import { generateToken, hashPassword, comparePassword } from './utils/auth.js';
 const app = express();
 app.use(express.json());
 
-// CORS configuration - updated for Vercel deployment
-app.use((req, res, next) => {
-  const allowedOrigins = ['http://localhost:5173', 'https://mealmesh.vercel.app'];
-  const origin = req.headers.origin;
-  
-  if (allowedOrigins.includes(origin)) {
-    res.setHeader('Access-Control-Allow-Origin', origin);
-  }
-  
-  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-  res.setHeader('Access-Control-Allow-Credentials', 'true');
-  
-  if (req.method === 'OPTIONS') {
-    return res.status(200).end();
-  }
-  
-  next();
-});
+// Updated CORS configuration for Vercel deployment
+const corsOptions = {
+  origin: function (origin, callback) {
+    const allowedOrigins = [
+      'http://localhost:5173', 
+      'https://mealmesh.vercel.app',
+      'https://mealmesh-backend.vercel.app'
+    ];
+    if (!origin || allowedOrigins.indexOf(origin) !== -1) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  credentials: true
+};
+
+// Replace the custom CORS middleware with the cors package
+app.use(cors(corsOptions));
 
 app.get('/api/health', (req, res) => {
   res.status(200).json({ status: 'ok' });
