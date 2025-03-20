@@ -36,17 +36,23 @@ const Login = () => {
     setLoading(true);
 
     try {
+      // For debugging purposes, log the URL being used
+      console.log(`Making login request to: ${import.meta.env.VITE_BACKEND_URL}/api/auth/login`);
+      
       const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/auth/login`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({ ...formData, type: loginType }),
-        // Use credentials: 'include' only for same-site or specific domains
         credentials: 'include'
       });
 
+      // For debugging, log response details
+      console.log('Login response status:', response.status);
+      
       const data = await response.json();
+      console.log('Login response data:', data);
 
       if (response.ok) {
         login(data); // Update auth context
@@ -61,8 +67,8 @@ const Login = () => {
         setError(data.message || 'Login failed. Please check your credentials.');
       }
     } catch (err) {
+      console.error('Login error details:', err);
       setError('Connection error. Please try again later.');
-      console.error('Login error:', err);
     } finally {
       setLoading(false);
     }

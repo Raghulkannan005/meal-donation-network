@@ -19,13 +19,11 @@ const corsOptions = {
     
     const allowedOrigins = [
       'http://localhost:5173',
-      'https://mealmesh.vercel.app',
-      'https://meal-donate.vercel.app',
-      'https://mealmesh-backend.vercel.app'
+      'https://mealmesh.vercel.app'
     ];
     
     if (!origin || allowedOrigins.includes(origin)) {
-      callback(null, origin);  // Return the specific origin instead of true
+      callback(null, origin);  // Return the specific origin instead of wildcard
     } else {
       callback(new Error('Not allowed by CORS'));
     }
@@ -37,7 +35,7 @@ const corsOptions = {
 
 app.use(cors(corsOptions));
 
-// Add OPTIONS handling for preflight requests
+// Make sure OPTIONS requests are handled properly
 app.options('*', cors(corsOptions));
 
 app.get('/api/health', (req, res) => {
