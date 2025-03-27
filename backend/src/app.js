@@ -32,11 +32,7 @@ app.use(express.json());
 // Updated CORS configuration for all environments
 const corsOptions = {
   origin: function (origin, callback) {
-    // Allow any origin in development
-    if (process.env.NODE_ENV === 'development') {
-      return callback(null, true);
-    }
-    
+
     const allowedOrigins = [
       'http://localhost:5173',
       'https://mealmesh.vercel.app'

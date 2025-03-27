@@ -26,9 +26,6 @@ export const connectDB = async () => {
   } catch (error) {
     console.error(`Error connecting to MongoDB: ${error.message}`);
     // Don't exit process in production - allows Vercel to handle errors
-    if (process.env.NODE_ENV !== 'production') {
-      process.exit(1);
-    }
     throw error; // Propagate error for handling
   }
 };
